@@ -4,9 +4,9 @@ from functions.extract_title import extract_title
 from functions.markdown_to_html_node import markdown_to_html_node
 
 
-def generate_page_recursive(from_path: str, template_path: str, dest_path: str):
-    # print(f"Generating page from {from_path} to {dest_path}")
-
+def generate_page_recursive(
+    from_path: str, template_path: str, dest_path: str, base_path: str
+):
     if os.path.isfile(from_path):
         markdown_file = open(from_path, "r")
         markdown_text = markdown_file.read()
@@ -22,6 +22,9 @@ def generate_page_recursive(from_path: str, template_path: str, dest_path: str):
         final_html = template_text.replace("{{ Title }}", title).replace(
             "{{ Content }}", markdown_to_html
         )
+
+        final_html = final_html.replace('href="/', f'href="{base_path}')
+        final_html = final_html.replace('src="/', f'href="{base_path}')
 
         parent = os.path.dirname(dest_path)
 
@@ -41,6 +44,10 @@ def generate_page_recursive(from_path: str, template_path: str, dest_path: str):
             destination_path = os.path.join(dest_path, file)
 
             if os.path.isdir(source_path):
-                generate_page_recursive(source_path, template_path, destination_path)
+                generate_page_recursive(
+                    source_path, template_path, destination_path, base_path
+                )
             else:
-                generate_page_recursive(source_path, template_path, dest_path)
+                generate_page_recursive(
+                    source_path, template_path, dest_path, base_path
+                )
