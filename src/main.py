@@ -6,7 +6,7 @@ from functions.generate_page_recursive import generate_page_recursive
 
 
 def main():
-    base_path = sys.argv[1] + "/" if len(sys.argv) > 1 else "/"
+    base_path = sys.argv[1] if len(sys.argv) > 1 else "/"
     markdown_path = os.path.join("content")
     template_path = os.path.join("template.html")
     destination_path = os.path.join("docs")
